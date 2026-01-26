@@ -476,3 +476,43 @@ themeToggle.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="n
   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
 </svg>`;
 loop();
+
+// Project carousel with mouse wheel scroll and dots
+const projectCards = document.querySelector('#projects .cards');
+const projectDots = document.querySelectorAll('.project-dot');
+
+if (projectCards) {
+  // Mouse wheel horizontal scroll
+  projectCards.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+      projectCards.scrollBy({
+        left: e.deltaY * 2,
+        behavior: 'smooth'
+      });
+    }
+  }, { passive: false });
+
+  // Update dots on scroll
+  projectCards.addEventListener('scroll', () => {
+    const scrollLeft = projectCards.scrollLeft;
+    const cardWidth = 632; // card width (600px) + gap (32px)
+    const activeIndex = Math.round(scrollLeft / cardWidth);
+    
+    projectDots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === activeIndex);
+    });
+  });
+
+  // Click on dots to scroll
+  projectDots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const index = parseInt(dot.dataset.index);
+      const cardWidth = 632;
+      projectCards.scrollTo({
+        left: index * cardWidth,
+        behavior: 'smooth'
+      });
+    });
+  });
+}

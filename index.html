@@ -16,7 +16,6 @@
 		<nav>
 			<div class="brand">Raag Yatchu Maharjan <span>Geo/ML Portfolio</span></div>
 			<ul>
-				<li><a class="nav-icon" href="#hero" title="Top"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a></li>
 				<li><a class="nav-icon" href="#about" title="About"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg></a></li>
 				<li><a class="nav-icon" href="#education" title="Education"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5v6M12 15v5M9 18h6"/></svg></a></li>
 				<li><a class="nav-icon" href="#experience" title="Experience"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V4c0-1-1-2-2-2H10c-1 0-2 1-2 2v3"/></svg></a></li>
@@ -33,6 +32,13 @@
 			<div class="profile-header">
 				<h1 class="profile-name">Raag Yatchu<br/>Maharjan</h1>
 				<p class="profile-title">GIS & ML Developer</p>
+				<p class="profile-tagline">Computer engineering student applying machine learning, computer vision, and data analysis to spatial challenges like flood risk and landfill siting.</p>
+				<div class="profile-chips">
+					<span class="profile-chip">GIS & Remote Sensing</span>
+					<span class="profile-chip">Machine Learning</span>
+					<span class="profile-chip">Computer Vision</span>
+					<span class="profile-chip">Data Analysis</span>
+				</div>
 			</div>
 			<div class="profile-skills">
 				<div class="skill-category">
@@ -67,23 +73,6 @@
 	</aside>
 
 	<main>
-		<section id="hero">
-			<div class="pill">Geo AI | Spatial Analytics | Machine Learning</div>
-			<div class="hero-grid">
-				<div>
-					<h1>Raag Yatchu Maharjan</h1>
-					<p>GIS-focused computer engineering student applying machine learning, computer vision, and data analysis to spatial challenges like flood risk and landfill siting.</p>
-
-					<div class="chip-row">
-						<div class="chip">GIS & Remote Sensing</div>
-						<div class="chip">Machine Learning</div>
-						<div class="chip">Computer Vision</div>
-						<div class="chip">Data Analysis</div>
-					</div>
-				</div>
-
-		</section>
-
 		<section id="about">
 			<div class="tagline">Profile</div>
 			<h2>About</h2>
@@ -212,24 +201,30 @@
 			<div class="tagline">Projects</div>
 			<h2>Selected work</h2>
 			<div class="cards">
-				<div class="card">
-					<h3>Landfill Site Selection (Ongoing)</h3>
-					<p>Data-driven suitability analysis using GIS and remote sensing layers to recommend optimal landfill locations.</p>
-					<div class="chip-row">
-						<div class="chip">GIS</div>
-						<div class="chip">Remote Sensing</div>
-						<div class="chip">Spatial Analysis</div>
-					</div>
+			<div class="card featured-project">
+				<h3>Landfill Site Selection (Ongoing)</h3>
+				<div class="project-preview">
+					<img src="Landfill.png" alt="Landfill Site Selection Study Area" />
 				</div>
-				<div class="card">
-					<h3>Urban Flood Risk Mapping (2024)</h3>
-					<p>Pluvial flood prediction model integrating GIS datasets with deep learning to map urban risk.</p>
-					<div class="chip-row">
-						<div class="chip">Deep Learning</div>
-						<div class="chip">Flood Modeling</div>
-						<div class="chip">GeoAI</div>
-					</div>
+				<p>Data-driven suitability analysis using GIS and remote sensing layers to recommend optimal landfill locations.</p>
+				<div class="chip-row">
+					<div class="chip">GIS</div>
+					<div class="chip">Remote Sensing</div>
+					<div class="chip">Spatial Analysis</div>
 				</div>
+			</div>
+			<div class="card featured-project">
+				<h3>Urban Flood Risk Mapping (2024)</h3>
+				<div class="project-preview">
+					<img src="RFout.png" alt="Flood Risk Mapping Output" />
+				</div>
+				<p>Pluvial flood prediction model integrating GIS datasets with deep learning to map urban risk.</p>
+				<div class="chip-row">
+					<div class="chip">Deep Learning</div>
+					<div class="chip">Flood Modeling</div>
+					<div class="chip">GeoAI</div>
+				</div>
+			</div>
 				<div class="card">
 					<h3>Lighting Engine (Ray Casting)</h3>
 					<p>Custom ray-casting engine experimenting with lighting and visibility for interactive scenes.</p>
@@ -255,6 +250,13 @@
 						<div class="chip">Computer Vision</div>
 					</div>
 				</div>
+			</div>
+			<div class="project-dots">
+				<span class="project-dot active" data-index="0"></span>
+				<span class="project-dot" data-index="1"></span>
+				<span class="project-dot" data-index="2"></span>
+				<span class="project-dot" data-index="3"></span>
+				<span class="project-dot" data-index="4"></span>
 			</div>
 		</section>
 
