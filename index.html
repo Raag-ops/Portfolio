@@ -233,8 +233,11 @@
 						<div class="chip">C++</div>
 					</div>
 				</div>
-				<div class="card">
-					<h3>Game of Life (Rulesets)</h3>
+			<div class="card featured-project">
+				<h3>Game of Life (Rulesets)</h3>
+				<div class="project-preview">
+					<img src="GameofLife.gif" alt="Game of Life Simulation" />
+				</div>
 					<p>Extended Conway's Game of Life with custom rule experimentation and visualization.</p>
 					<div class="chip-row">
 						<div class="chip">Simulation</div>
@@ -305,8 +308,26 @@
 			<div class="tagline">Contact</div>
 			<h2>Collaborate</h2>
 			<p>Reach out for collaborations, research, or project work in GIS, ML, and computer vision. Kathmandu-based; open to remote.</p>
-			<div class="cta-row">
-				<a class="btn" href="mailto:maahrjanraag@gmail.com">Email</a>
+		<div style="margin-top: 28px; margin-bottom: 20px;">
+			<h3 style="font-size: 18px; margin-bottom: 14px;">Send me a message</h3>
+			<form id="emailForm" style="display: flex; flex-direction: column; gap: 14px; max-width: 500px;">
+				<div style="display: flex; flex-direction: column; gap: 6px;">
+					<label for="name" style="font-size: 12px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em;">Name</label>
+					<input type="text" id="name" name="name" required style="padding: 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: var(--text); font-family: inherit; font-size: 14px; transition: border-color 160ms ease;" placeholder="Your name" />
+				</div>
+				<div style="display: flex; flex-direction: column; gap: 6px;">
+					<label for="email" style="font-size: 12px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em;">Email</label>
+					<input type="email" id="email" name="email" required style="padding: 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: var(--text); font-family: inherit; font-size: 14px; transition: border-color 160ms ease;" placeholder="your.email@example.com" />
+				</div>
+				<div style="display: flex; flex-direction: column; gap: 6px;">
+					<label for="message" style="font-size: 12px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em;">Message</label>
+					<textarea id="message" name="message" required rows="5" style="padding: 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: var(--text); font-family: inherit; font-size: 14px; resize: vertical; transition: border-color 160ms ease;" placeholder="Tell me about your project or collaboration idea..."></textarea>
+				</div>
+				<button type="submit" class="btn" style="width: fit-content;">Send Message</button>
+				<p id="formMessage" style="font-size: 13px; color: var(--accent); display: none; margin-top: 8px;"></p>
+			</form>
+		</div>
+		<div class="cta-row">
 				<a class="btn secondary" href="https://github.com/Raag-ops" target="_blank" rel="noreferrer">GitHub</a>
 				<a class="btn secondary" href="tel:+9779840377999">Call</a>
 			</div>

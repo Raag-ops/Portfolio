@@ -516,3 +516,48 @@ if (projectCards) {
     });
   });
 }
+
+// Email form handler
+const emailForm = document.getElementById('emailForm');
+if (emailForm) {
+  emailForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+    const formMessage = document.getElementById('formMessage');
+    
+    try {
+      // Using formspree.io service for form submission
+      const response = await fetch('https://formspree.io/f/myzqvvdw', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message
+        })
+      });
+      
+      if (response.ok) {
+        formMessage.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
+        formMessage.style.display = 'block';
+        formMessage.style.color = 'var(--accent)';
+        emailForm.reset();
+        setTimeout(() => {
+          formMessage.style.display = 'none';
+        }, 5000);
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      formMessage.textContent = '✗ Error sending message. Please try again or email directly.';
+      formMessage.style.display = 'block';
+      formMessage.style.color = '#ff6b6b';
+      console.error('Error:', error);
+    }
+  });
+}

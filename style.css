@@ -38,8 +38,8 @@
 
 body {
 	font-family: 'Space Grotesk', 'Segoe UI', system-ui, -apple-system, sans-serif;
-	font-size: 24px;
-	line-height: 1.85;
+	font-size: 16px;
+	line-height: 1.7;
 	background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
 	color: var(--text);
 	min-height: 100vh;
@@ -233,13 +233,6 @@ nav button.nav-icon:hover {
 	background: rgba(58, 58, 58, 0.06);
 	border: 1px solid rgba(58, 58, 58, 0.12);
 }
-	font-size: 15px;
-	font-weight: 600;
-	color: var(--accent);
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
-	margin: 0;
-}
 
 /* Profile Skills Section */
 .profile-skills {
@@ -275,7 +268,7 @@ nav button.nav-icon:hover {
 	background: rgba(255, 255, 255, 0.06);
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	border-radius: 4px;
-	color: var(--secondary);
+	color: var(--text);
 	transition: all 160ms ease;
 }
 
@@ -363,50 +356,57 @@ section {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
 	color: var(--text);
 	letter-spacing: -0.02em;
+	font-family: 'Space Grotesk', sans-serif;
 }
 
 h1 {
-	font-size: clamp(64px, 7vw, 96px);
-	line-height: 1.05;
-	margin-bottom: 24px;
+	font-size: clamp(48px, 5vw, 64px);
+	line-height: 1.1;
+	margin-bottom: 20px;
+	font-weight: 700;
 }
 
 h2 {
-	font-size: clamp(44px, 5.5vw, 68px);
-	margin-bottom: 28px;
+	font-size: clamp(36px, 4vw, 48px);
+	margin-bottom: 24px;
+	font-weight: 700;
 }
 
 h3 {
-	font-size: clamp(30px, 3.5vw, 40px);
-	margin-bottom: 20px;
+	font-size: clamp(18px, 2vw, 22px);
+	margin-bottom: 12px;
+	font-weight: 600;
 }
 
 h4 {
-	font-size: clamp(24px, 3vw, 32px);
-	margin-bottom: 16px;
+	font-size: clamp(16px, 1.5vw, 18px);
+	margin-bottom: 10px;
+	font-weight: 600;
 }
 
 p {
 	color: var(--muted);
-	line-height: 1.6;
+	line-height: 1.65;
 	max-width: 720px;
+	font-size: 16px;
 }
 
 .pill {
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
-	padding: 12px 18px;
+	padding: 10px 16px;
 	border-radius: 999px;
 	border: 1px solid rgba(255, 255, 255, 0.12);
 	background: var(--card);
 	backdrop-filter: blur(20px);
 	box-shadow: none;
 	color: var(--text);
-	font-size: 16px;
+	font-size: 14px;
 	letter-spacing: 0.03em;
 }
 
@@ -435,8 +435,9 @@ p {
 
 .stat strong {
 	display: block;
-	font-size: 32px;
+	font-size: 24px;
 	margin-bottom: 6px;
+	font-weight: 700;
 }
 
 .chip-row {
@@ -447,19 +448,20 @@ p {
 }
 
 .chip {
-	padding: 10px 16px;
-	background: var(--card);
-	color: var(--text);
-	border: 1px solid rgba(255, 255, 255, 0.12);
-	border-radius: 12px;
-	font-size: 17px;
+	padding: 6px 12px;
+	background: rgba(164, 180, 148, 0.1);
+	color: var(--accent);
+	border: 1px solid rgba(164, 180, 148, 0.2);
+	border-radius: 20px;
+	font-size: 13px;
 	letter-spacing: 0.01em;
+	font-weight: 500;
 }
 
 :root[data-theme="light"] .chip {
-	background: var(--card);
-	color: var(--text);
-	border: 1px solid rgba(0, 0, 0, 0.1);
+	background: rgba(58, 58, 58, 0.06);
+	color: var(--accent);
+	border: 1px solid rgba(58, 58, 58, 0.12);
 }
 
 .cards {
@@ -538,10 +540,22 @@ p {
 	border: 1px solid rgba(255, 255, 255, 0.06);
 	border-radius: 18px;
 	display: grid;
-	gap: 12px;
+	gap: 10px;
 	backdrop-filter: blur(8px);
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 	transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, background 300ms ease;
+}
+
+.card h3 {
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--accent);
+	margin-bottom: 4px;
+}
+
+.card p {
+	font-size: 14px;
+	line-height: 1.6;
 }
 
 :root[data-theme="light"] .card {
@@ -641,8 +655,8 @@ p {
 }
 
 .about-intro p {
-	font-size: 18px;
-	line-height: 1.8;
+	font-size: 16px;
+	line-height: 1.7;
 	color: var(--muted);
 }
 
@@ -677,9 +691,10 @@ p {
 }
 
 .about-expertise h3 {
-	font-size: 20px;
-	margin-bottom: 24px;
+	font-size: 18px;
+	margin-bottom: 20px;
 	color: var(--text);
+	font-weight: 600;
 }
 
 .expertise-grid {
@@ -733,10 +748,11 @@ p {
 }
 
 .expertise-card h4 {
-	font-size: inherit;
-	font-weight: 700;
+	font-size: 16px;
+	font-weight: 600;
 	color: var(--accent);
 	letter-spacing: 0.02em;
+	margin-bottom: 8px;
 }
 
 .expertise-tags {
@@ -763,10 +779,11 @@ p {
 
 .tagline {
 	color: var(--accent-2);
-	font-weight: 700;
-	letter-spacing: 0.05em;
+	font-weight: 600;
+	letter-spacing: 0.08em;
 	text-transform: uppercase;
-	font-size: 13px;
+	font-size: 12px;
+	margin-bottom: 8px;
 }
 
 .timeline {
@@ -777,10 +794,24 @@ p {
 .timeline-item {
 	padding: 18px 20px;
 	border-radius: 16px;
-	background: var(--card);
-	border: 1px solid rgba(255, 255, 255, 0.16);
-	backdrop-filter: blur(20px);
-	box-shadow: 0 10px 32px rgba(0, 0, 0, 0.2);
+	background: rgba(255, 255, 255, 0.02);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	backdrop-filter: blur(8px);
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.timeline-item strong {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--text);
+	display: block;
+	margin-bottom: 6px;
+}
+
+.timeline-item p {
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--muted);
 }
 
 .footer {
@@ -801,15 +832,16 @@ p {
 	display: inline-flex;
 	align-items: center;
 	gap: 10px;
-	padding: 13px 18px;
-	border-radius: 14px;
+	padding: 12px 20px;
+	border-radius: 12px;
 	border: 1px solid rgba(164, 180, 148, 0.2);
 	background: linear-gradient(135deg, rgba(164, 180, 148, 0.15), rgba(164, 180, 148, 0.08));
 	backdrop-filter: blur(16px) saturate(180%);
 	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 	color: var(--text);
 	text-decoration: none;
-	font-weight: 700;
+	font-size: 14px;
+	font-weight: 600;
 	transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease;
 }
 
