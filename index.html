@@ -2,7 +2,11 @@
 <html lang="en" data-theme="light">
 <head>
 	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+	<meta name="theme-color" content="#123024" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<title>Geo | ML | Data Portfolio</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,11 +26,11 @@
 				<li><a class="nav-icon" href="#projects" title="Projects"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></a></li>
 				<li><a class="nav-icon" href="#stack" title="Skills"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 1 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></a></li>
 				<li><a class="nav-icon" href="#contact" title="Contact"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></a></li>
+				<li><a class="nav-icon" href="cv.pdf" title="Download CV" download><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg></a></li>
 			</ul>
 		</nav>
 	</header>
 
-	<!-- Fixed Profile Panel -->
 	<aside class="profile-panel">
 		<div class="profile-content">
 			<div class="profile-header">
@@ -37,6 +41,7 @@
 					<span class="profile-chip">GIS & Remote Sensing</span>
 					<span class="profile-chip">Machine Learning</span>
 					<span class="profile-chip">Computer Vision</span>
+					<span class="profile-chip">Embedded Systems</span>
 					<span class="profile-chip">Data Analysis</span>
 				</div>
 			</div>
@@ -45,22 +50,26 @@
 					<span class="skill-label">Languages</span>
 					<div class="skill-items">
 						<span class="skill-tag">Python</span>
-						<span class="skill-tag">JavaScript</span>
+						<span class="skill-tag">C</span>
 						<span class="skill-tag">C++</span>
+						<span class="skill-tag">Java</span>
+						<span class="skill-tag">JavaScript</span>
 						<span class="skill-tag">SQL</span>
+						<span class="skill-tag">Assembly</span>
 					</div>
 				</div>
 				<div class="skill-category">
-					<span class="skill-label">GIS & Data</span>
+					<span class="skill-label">GIS & Remote Sensing</span>
 					<div class="skill-items">
 						<span class="skill-tag">QGIS</span>
 						<span class="skill-tag">ArcGIS</span>
 						<span class="skill-tag">GDAL</span>
+						<span class="skill-tag">Rasterio</span>
 						<span class="skill-tag">PostGIS</span>
 					</div>
 				</div>
 				<div class="skill-category">
-					<span class="skill-label">ML & AI</span>
+					<span class="skill-label">ML & Computer Vision</span>
 					<div class="skill-items">
 						<span class="skill-tag">PyTorch</span>
 						<span class="skill-tag">TensorFlow</span>
@@ -68,7 +77,28 @@
 						<span class="skill-tag">scikit-learn</span>
 					</div>
 				</div>
+				<div class="skill-category">
+					<span class="skill-label">Engineering</span>
+					<div class="skill-items">
+						<span class="skill-tag">Embedded Systems</span>
+						<span class="skill-tag">Control Systems</span>
+						<span class="skill-tag">EDA</span>
+					</div>
+				</div>
+				<div class="skill-category">
+					<span class="skill-label">Tools</span>
+					<div class="skill-items">
+						<span class="skill-tag">VS Code</span>
+						<span class="skill-tag">Visual Studio</span>
+						<span class="skill-tag">Git</span>
+						<span class="skill-tag">Jupyter</span>
+					</div>
+				</div>
 			</div>
+			<a class="btn cv-download" href="cv.pdf" download>
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+				Download CV
+			</a>
 		</div>
 	</aside>
 
@@ -210,6 +240,7 @@
 				<div class="chip-row">
 					<div class="chip">GIS</div>
 					<div class="chip">Remote Sensing</div>
+					<div class="chip">Segmentation</div>
 					<div class="chip">Spatial Analysis</div>
 				</div>
 			</div>
@@ -221,6 +252,8 @@
 				<p>Pluvial flood prediction model integrating GIS datasets with deep learning to map urban risk.</p>
 				<div class="chip-row">
 					<div class="chip">Deep Learning</div>
+					<div class="chip">Decision Tree</div>
+					<div class="chip">Classification</div>
 					<div class="chip">Flood Modeling</div>
 					<div class="chip">GeoAI</div>
 				</div>
@@ -241,7 +274,10 @@
 					<p>Extended Conway's Game of Life with custom rule experimentation and visualization.</p>
 					<div class="chip-row">
 						<div class="chip">Simulation</div>
-						<div class="chip">Python</div>
+						<div class="chip">C++</div>
+						<div class="chip">Modelling</div>
+						<div class="chip">Ruleset</div>
+						<div class="chip">Algorithms</div>
 					</div>
 				</div>
 				<div class="card">

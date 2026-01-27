@@ -10,10 +10,18 @@ const nodes = [];
 const edges = [];
 let draggedNode = null;
 
+// Mobile detection and performance settings
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+const isLowPower = navigator.hardwareConcurrency ? navigator.hardwareConcurrency <= 4 : isMobile;
+let animationEnabled = !isMobile || !isLowPower;
+let lastFrameTime = 0;
+const targetFPS = isMobile ? 24 : 60;
+const frameInterval = 1000 / targetFPS;
+
 function resize() {
   width = window.innerWidth;
   height = window.innerHeight;
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = isMobile ? 1 : (window.devicePixelRatio || 1);
   canvas.width = width * dpr;
   canvas.height = height * dpr;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -23,7 +31,8 @@ function resize() {
 function initNetwork() {
   nodes.length = 0;
   edges.length = 0;
-  const nodeCount = 200; // Much denser network
+  // Reduce nodes significantly on mobile
+  const nodeCount = isMobile ? 40 : (isLowPower ? 80 : 200);
   for (let i = 0; i < nodeCount; i++) {
     nodes.push({
       x: Math.random() * width,
@@ -160,8 +169,9 @@ function drawContours(depth) {
   ctx.fillRect(0, 0, width, height);
 
   const time = tick * 0.0018;
-  const numContours = 16; // even sparser lines
-  const resolution = 9;   // fewer points -> lighter + wider spacing
+  // Reduce complexity on mobile
+  const numContours = isMobile ? 8 : 16;
+  const resolution = isMobile ? 16 : 9;
   const cols = Math.ceil(width / resolution);
   const rows = Math.ceil(height / resolution);
   
@@ -304,12 +314,13 @@ function drawNetwork(depth) {
   ctx.fillStyle = '#fafafa';
   ctx.fillRect(0, 0, width, height);
 
-  const px = pointer.x * width;
-  const py = pointer.y * height;
+  // Skip pointer interaction on mobile for performance
+  const px = isMobile ? width / 2 : pointer.x * width;
+  const py = isMobile ? height / 2 : pointer.y * height;
   
-  // Increased connection threshold for denser network
-  const baseDist = 130;
-  const pulseAmount = Math.sin(tick * 0.006) * 25;
+  // Reduced connection threshold on mobile
+  const baseDist = isMobile ? 80 : 130;
+  const pulseAmount = Math.sin(tick * 0.006) * (isMobile ? 10 : 25);
   const connectionThreshold = baseDist + pulseAmount;
 
   for (const node of nodes) {
@@ -322,13 +333,15 @@ function drawNetwork(depth) {
       if (node.x < 0 || node.x > width) node.vx *= -1;
       if (node.y < 0 || node.y > height) node.vy *= -1;
       
-      // Gentler attraction to cursor
-      const dx = px - node.x;
-      const dy = py - node.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 200 && dist > 10) {
-        node.vx += (dx / dist) * 0.008;
-        node.vy += (dy / dist) * 0.008;
+      // Skip cursor attraction on mobile
+      if (!isMobile) {
+        const dx = px - node.x;
+        const dy = py - node.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 200 && dist > 10) {
+          node.vx += (dx / dist) * 0.008;
+          node.vy += (dy / dist) * 0.008;
+        }
       }
       
       // Lower speed limit
@@ -339,14 +352,19 @@ function drawNetwork(depth) {
       }
     }
     
-    const dx = node.x - px;
-    const dy = node.y - py;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    const force = Math.max(0, 1 - dist / 150);
-    node.radius = node.baseRadius * (1 + force * 1.5);
+    // Simpler radius calculation on mobile
+    if (!isMobile) {
+      const dx = node.x - px;
+      const dy = node.y - py;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const force = Math.max(0, 1 - dist / 150);
+      node.radius = node.baseRadius * (1 + force * 1.5);
+    } else {
+      node.radius = node.baseRadius;
+    }
   }
 
-  // Draw darker connections
+  // Draw connections - use spatial grid optimization on mobile
   ctx.lineCap = 'round';
   for (let i = 0; i < nodes.length; i++) {
     for (let j = i + 1; j < nodes.length; j++) {
@@ -376,18 +394,31 @@ function drawNetwork(depth) {
   }
 }
 
-function loop() {
+function loop(currentTime) {
+  // Frame rate limiting for mobile
+  if (currentTime - lastFrameTime < frameInterval) {
+    requestAnimationFrame(loop);
+    return;
+  }
+  lastFrameTime = currentTime;
+  
   const depth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--depth')) || 0;
   if (theme === 'dark') {
     drawContours(depth);
   } else {
     drawNetwork(depth);
   }
-  tick += 0.5;
+  tick += isMobile ? 0.3 : 0.5;
   requestAnimationFrame(loop);
 }
 
+// Throttled pointer handler for mobile
+let pointerThrottle = 0;
 function handlePointer(e) {
+  const now = Date.now();
+  if (isMobile && now - pointerThrottle < 50) return;
+  pointerThrottle = now;
+  
   const xNorm = e.clientX / window.innerWidth;
   const yNorm = e.clientY / window.innerHeight;
   pointer.x = xNorm;
@@ -396,9 +427,18 @@ function handlePointer(e) {
   document.documentElement.style.setProperty('--pointer-y', `${yNorm * 100}%`);
 }
 
-window.addEventListener('resize', resize);
+// Debounced resize handler
+let resizeTimeout;
+function debouncedResize() {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(resize, 150);
+}
+
+window.addEventListener('resize', debouncedResize);
 window.addEventListener('scroll', onScroll, { passive: true });
-window.addEventListener('pointermove', handlePointer);
+if (!isMobile) {
+  window.addEventListener('pointermove', handlePointer);
+}
 
 canvas.addEventListener('mousedown', (e) => {
   if (theme !== 'light') return;
@@ -475,40 +515,47 @@ initNetwork();
 themeToggle.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
 </svg>`;
-loop();
+requestAnimationFrame(loop);
 
-// Project carousel with mouse wheel scroll and dots
+// Project carousel with touch support and dots
 const projectCards = document.querySelector('#projects .cards');
 const projectDots = document.querySelectorAll('.project-dot');
 
 if (projectCards) {
-  // Mouse wheel horizontal scroll
-  projectCards.addEventListener('wheel', (e) => {
-    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-      e.preventDefault();
-      projectCards.scrollBy({
-        left: e.deltaY * 2,
-        behavior: 'smooth'
-      });
-    }
-  }, { passive: false });
+  // Mouse wheel horizontal scroll (desktop only)
+  if (!isMobile) {
+    projectCards.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        projectCards.scrollBy({
+          left: e.deltaY * 2,
+          behavior: 'smooth'
+        });
+      }
+    }, { passive: false });
+  }
 
-  // Update dots on scroll
+  // Update dots on scroll - throttled
+  let scrollThrottle = 0;
   projectCards.addEventListener('scroll', () => {
+    const now = Date.now();
+    if (now - scrollThrottle < 100) return;
+    scrollThrottle = now;
+    
     const scrollLeft = projectCards.scrollLeft;
-    const cardWidth = 632; // card width (600px) + gap (32px)
+    const cardWidth = isMobile ? 296 : 632; // Adjusted for mobile card width
     const activeIndex = Math.round(scrollLeft / cardWidth);
     
     projectDots.forEach((dot, index) => {
       dot.classList.toggle('active', index === activeIndex);
     });
-  });
+  }, { passive: true });
 
-  // Click on dots to scroll
+  // Click/tap on dots to scroll
   projectDots.forEach((dot) => {
     dot.addEventListener('click', () => {
       const index = parseInt(dot.dataset.index);
-      const cardWidth = 632;
+      const cardWidth = isMobile ? 296 : 632;
       projectCards.scrollTo({
         left: index * cardWidth,
         behavior: 'smooth'
