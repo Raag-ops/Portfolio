@@ -175,7 +175,12 @@ function initSplashScreen() {
 }
 
 // Initialize splash screen when DOM is ready
-document.addEventListener('DOMContentLoaded', initSplashScreen);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSplashScreen);
+} else {
+  // DOM is already ready, call immediately
+  initSplashScreen();
+}
 // ========== END SPLASH SCREEN LOGIC ==========
 
 function resize() {
