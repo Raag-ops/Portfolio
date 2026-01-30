@@ -52,17 +52,15 @@ body.splash-active header,
 body.splash-active .profile-panel,
 body.splash-active main,
 body.splash-active .theme-btn {
-	opacity: 0;
+	visibility: hidden;
 	pointer-events: none;
-	transition: opacity 0.5s ease;
 }
 
 body header,
 body .profile-panel,
 body main,
 body .theme-btn {
-	opacity: 1;
-	transition: opacity 0.5s ease 0.3s;
+	visibility: visible;
 }
 
 .splash-content {
@@ -775,6 +773,7 @@ p {
 	backdrop-filter: blur(8px);
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 	transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, background 300ms ease;
+	opacity: 1;
 }
 
 .card h3 {
