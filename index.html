@@ -14,6 +14,21 @@
 	<link rel="stylesheet" href="style.css" />
 </head>
 <body>
+	<!-- Welcome Splash Screen -->
+	<div id="splash-screen" class="splash-screen">
+		<div class="splash-content">
+			<h1 class="glitch-text">
+				<span class="glitch-word"></span>
+			</h1>
+			<div class="scroll-indicator">
+				<span>Scroll to explore</span>
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M12 5v14M5 12l7 7 7-7"/>
+				</svg>
+			</div>
+		</div>
+	</div>
+
 	<canvas id="topoCanvas" aria-hidden="true"></canvas>
 
 	<header>
@@ -108,7 +123,7 @@
 			<h2>About</h2>
 			<div class="about-grid">
 				<div class="about-intro">
-					<p>Computer Engineering student (Tribhuvan University) with a focus on geospatial intelligence. I work at the intersection of GIS, machine learning, and computer vision—building spatial models, remote-sensing workflows, and lightweight data products that improve planning and risk mitigation.</p>
+					<p>Computer Engineering student (Tribhuvan University) with a focus on geospatial intelligence. I work at the intersection of GIS, machine learning, and computer vision; building spatial models, remote-sensing workflows, and geospatial data products that improve planning and risk mitigation.</p>
 
 				</div>
 				<div class="about-expertise">
@@ -236,7 +251,7 @@
 				<div class="project-preview">
 					<img src="Landfill.png" alt="Landfill Site Selection Study Area" />
 				</div>
-				<p>Data-driven suitability analysis using GIS and remote sensing layers to recommend optimal landfill locations.</p>
+				<p>Data-driven suitability analysis using GIS and remote sensing layers to recommend optimal landfill locations. Seeing more into Segmentation models and techniques.</p>
 				<div class="chip-row">
 					<div class="chip">GIS</div>
 					<div class="chip">Remote Sensing</div>
@@ -248,8 +263,8 @@
 				<h3>Urban Flood Risk Mapping (2024)</h3>
 				<div class="project-preview">
 					<img src="RFout.png" alt="Flood Risk Mapping Output" />
-				</div>
-				<p>Pluvial flood prediction model integrating GIS datasets with deep learning to map urban risk.</p>
+				</div> 
+				<p>Pluvial flood prediction model integrating GIS datasets with deep learning to map urban risk. Creating a custom CNN for multi-band data processing.</p>
 				<div class="chip-row">
 					<div class="chip">Deep Learning</div>
 					<div class="chip">Decision Tree</div>
@@ -258,37 +273,45 @@
 					<div class="chip">GeoAI</div>
 				</div>
 			</div>
-				<div class="card">
-					<h3>Lighting Engine (Ray Casting)</h3>
-					<p>Custom ray-casting engine experimenting with lighting and visibility for interactive scenes.</p>
-					<div class="chip-row">
-						<div class="chip">Graphics</div>
-						<div class="chip">C++</div>
-					</div>
+			<div class="card featured-project">
+				<h3>Lighting Engine (Ray Casting)</h3>
+				<div class="project-preview">
+					<img src="RayCast.gif" alt="Ray Casting Engine Preview" />
 				</div>
+				<p>Custom ray-casting engine experimenting with lighting and visibility. My attempt into a real-time graphics project.</p>
+				<div class="chip-row">
+					<div class="chip">Graphics</div>
+					<div class="chip">C++</div>
+				</div>
+			</div>
 			<div class="card featured-project">
 				<h3>Game of Life (Rulesets)</h3>
 				<div class="project-preview">
 					<img src="GameofLife.gif" alt="Game of Life Simulation" />
 				</div>
-					<p>Extended Conway's Game of Life with custom rule experimentation and visualization.</p>
-					<div class="chip-row">
-						<div class="chip">Simulation</div>
-						<div class="chip">C++</div>
-						<div class="chip">Modelling</div>
-						<div class="chip">Ruleset</div>
-						<div class="chip">Algorithms</div>
-					</div>
+				<p>Extended Conway's Game of Life with custom rule experimentation and visualization. Simulating rulesets and modelling cellular automatas.</p>
+				<div class="chip-row">
+					<div class="chip">Simulation</div>
+					<div class="chip">C++</div>
+					<div class="chip">Modelling</div>
+					<div class="chip">Ruleset</div>
+					<div class="chip">Algorithms</div>
 				</div>
-				<div class="card">
-					<h3>License Plate Detection</h3>
-					<p>k-NN and OpenCV pipeline for license plate detection and recognition.</p>
-					<div class="chip-row">
-						<div class="chip">OpenCV</div>
-						<div class="chip">k-NN</div>
-						<div class="chip">Computer Vision</div>
-					</div>
+			</div>
+			<div class="card featured-project">
+				<h3>License Plate Detection</h3>
+				<div class="project-preview">
+					<img src="LicensePlate.png" alt="License Plate Detection Preview" />
 				</div>
+				<p>k-NN and OpenCV pipeline for license plate detection and recognition. My first look into Computer Vision and Machine Learning.</p>
+				<div class="chip-row">
+					<div class="chip">C++</div>
+					<div class="chip">Machine Learning</div>
+					<div class="chip">OpenCV</div>
+					<div class="chip">k-NN</div>
+					<div class="chip">Computer Vision</div>
+				</div>
+			</div>
 			</div>
 			<div class="project-dots">
 				<span class="project-dot active" data-index="0"></span>

@@ -18,6 +18,166 @@ let lastFrameTime = 0;
 const targetFPS = isMobile ? 24 : 60;
 const frameInterval = 1000 / targetFPS;
 
+// ========== SPLASH SCREEN LOGIC ==========
+const splashGreetings = [
+  { text: 'Hello', lang: 'en' },
+  { text: 'नमस्ते', lang: 'ne' },       // Nepali
+  { text: 'こんにちは', lang: 'ja' },   // Japanese
+];
+
+let currentGreetingIndex = 0;
+let splashActive = true;
+let isTyping = false;
+
+// Typewriter effect functions
+function typeWriter(element, text, callback, speed = 100) {
+  let i = 0;
+  isTyping = true;
+  element.textContent = '';
+  
+  function type() {
+    if (!splashActive) return;
+    if (i < text.length) {
+      const currentText = text.substring(0, i + 1);
+      element.textContent = currentText;
+      i++;
+      setTimeout(type, speed);
+    } else {
+      isTyping = false;
+      if (callback) callback();
+    }
+  }
+  type();
+}
+
+function eraseText(element, callback, speed = 60) {
+  isTyping = true;
+  let text = element.textContent;
+  
+  function erase() {
+    if (!splashActive) return;
+    if (text.length > 0) {
+      text = text.substring(0, text.length - 1);
+      element.textContent = text;
+      setTimeout(erase, speed);
+    } else {
+      isTyping = false;
+      if (callback) callback();
+    }
+  }
+  erase();
+}
+
+function initSplashScreen() {
+  const splashScreen = document.getElementById('splash-screen');
+  const glitchWord = document.querySelector('.glitch-word');
+  const glitchText = document.querySelector('.glitch-text');
+  
+  if (!splashScreen || !glitchWord) return;
+  
+  // Add splash-active class to body to hide content
+  document.body.classList.add('splash-active');
+  
+  // Start with empty and type the first word
+  glitchWord.textContent = '';
+  
+  function cycleGreetings() {
+    if (!splashActive) return;
+    
+    const greeting = splashGreetings[currentGreetingIndex];
+    
+    // Type the word
+    typeWriter(glitchWord, greeting.text, () => {
+      // Wait before erasing
+      setTimeout(() => {
+        if (!splashActive) return;
+        
+        // Erase the word
+        eraseText(glitchWord, () => {
+          // Move to next greeting
+          currentGreetingIndex = (currentGreetingIndex + 1) % splashGreetings.length;
+          
+          // Small pause before typing next word
+          setTimeout(cycleGreetings, 300);
+        });
+      }, 1500);
+    });
+  }
+  
+  // Start the cycle
+  setTimeout(cycleGreetings, 500);
+  
+  // Scroll/wheel to dismiss splash
+  let scrollThreshold = 0;
+  const dismissThreshold = 50;
+  
+  function handleScroll(delta) {
+    if (!splashActive) return;
+    
+    scrollThreshold += Math.abs(delta);
+    
+    if (scrollThreshold > dismissThreshold) {
+      dismissSplash();
+    }
+  }
+  
+  function dismissSplash() {
+    if (!splashActive) return;
+    splashActive = false;
+    splashScreen.classList.add('hidden');
+    document.body.classList.remove('splash-active');
+    document.body.style.overflow = '';
+    
+    // Remove splash after animation completes
+    setTimeout(() => {
+      splashScreen.style.display = 'none';
+    }, 800);
+  }
+  
+  // Mouse wheel
+  window.addEventListener('wheel', (e) => {
+    if (splashActive) {
+      e.preventDefault();
+      handleScroll(e.deltaY);
+    }
+  }, { passive: false });
+  
+  // Touch scroll
+  let touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    if (splashActive) {
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+  
+  window.addEventListener('touchmove', (e) => {
+    if (splashActive) {
+      const touchY = e.touches[0].clientY;
+      const delta = touchStartY - touchY;
+      handleScroll(delta);
+      touchStartY = touchY;
+    }
+  }, { passive: true });
+  
+  // Keyboard scroll (arrow keys, space, page down)
+  window.addEventListener('keydown', (e) => {
+    if (splashActive && ['ArrowDown', 'Space', 'PageDown', 'Enter'].includes(e.code)) {
+      e.preventDefault();
+      dismissSplash();
+    }
+  });
+  
+  // Click to dismiss
+  splashScreen.addEventListener('click', dismissSplash);
+  
+  // Prevent body scroll while splash is active
+  document.body.style.overflow = 'hidden';
+}
+
+// Initialize splash screen when DOM is ready
+document.addEventListener('DOMContentLoaded', initSplashScreen);
+// ========== END SPLASH SCREEN LOGIC ==========
+
 function resize() {
   width = window.innerWidth;
   height = window.innerHeight;
@@ -27,6 +187,7 @@ function resize() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (theme === 'light') initNetwork();
 }
+
 
 function initNetwork() {
   nodes.length = 0;

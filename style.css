@@ -13,6 +13,153 @@
 	--pointer-y: 50%;
 }
 
+/* ========== SPLASH SCREEN STYLES ========== */
+.splash-screen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+	transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s ease;
+}
+
+/* Allow canvas to show through splash */
+.splash-screen::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	pointer-events: none;
+}
+
+.splash-screen.hidden {
+	transform: translateY(-100%);
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* Hide main content while splash is active */
+body.splash-active header,
+body.splash-active .profile-panel,
+body.splash-active main,
+body.splash-active .theme-btn {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.5s ease;
+}
+
+body header,
+body .profile-panel,
+body main,
+body .theme-btn {
+	opacity: 1;
+	transition: opacity 0.5s ease 0.3s;
+}
+
+.splash-content {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 60px;
+}
+
+/* Glitch Text Effect with Typewriter */
+.glitch-text {
+	font-size: clamp(4rem, 15vw, 10rem);
+	font-weight: 700;
+	color: var(--text);
+	position: relative;
+	letter-spacing: -0.02em;
+	line-height: 1;
+	min-height: 1.2em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.glitch-word {
+	position: relative;
+	display: inline;
+}
+
+/* Typewriter cursor */
+.glitch-word::after {
+	content: '|';
+	font-weight: 400;
+	color: var(--accent);
+	animation: blink-cursor 0.7s step-end infinite;
+}
+
+@keyframes blink-cursor {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	color: var(--muted);
+	font-size: 14px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	animation: bounce 2s ease-in-out infinite;
+}
+
+.scroll-indicator svg {
+	animation: arrow-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce {
+	0%, 100% {
+		opacity: 0.6;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@keyframes arrow-bounce {
+	0%, 100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(8px);
+	}
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+	.glitch-text {
+		font-size: clamp(2.5rem, 12vw, 5rem);
+	}
+	
+	.splash-content {
+		gap: 40px;
+	}
+	
+	.scroll-indicator {
+		font-size: 12px;
+	}
+}
+
+/* ========== END SPLASH SCREEN STYLES ========== */
+
 :root[data-theme="light"] {
 	--bg-top: #fafafa;
 	--bg-bottom: #f0f0f0;
