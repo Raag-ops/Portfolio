@@ -1,5 +1,6 @@
 
-:root {
+:root,
+:root[data-theme="dark"] {
 	--bg-top: #123024;
 	--bg-bottom: #0f241b;
 	--accent: #c4b494;
@@ -24,7 +25,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+	background: linear-gradient(180deg, #123024, #0f241b);
 	transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s ease;
 }
 
@@ -76,7 +77,7 @@ body .theme-btn {
 .glitch-text {
 	font-size: clamp(4rem, 15vw, 10rem);
 	font-weight: 700;
-	color: var(--text);
+	color: #f0f5ec;
 	position: relative;
 	letter-spacing: -0.02em;
 	line-height: 1;
@@ -95,7 +96,7 @@ body .theme-btn {
 .glitch-word::after {
 	content: '|';
 	font-weight: 400;
-	color: var(--accent);
+	color: #c4b494;
 	animation: blink-cursor 0.7s step-end infinite;
 }
 
@@ -114,7 +115,7 @@ body .theme-btn {
 	flex-direction: column;
 	align-items: center;
 	gap: 12px;
-	color: var(--muted);
+	color: #b8c4a8;
 	font-size: 14px;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
@@ -1154,8 +1155,37 @@ p {
 		padding: 20px 16px;
 		border-radius: 16px;
 		backdrop-filter: none;
+		background: rgba(20, 36, 30, 0.95);
 	}
 	
+	:root[data-theme="light"] section {
+		background: rgba(255, 255, 255, 0.95);
+	}
+	
+	.expertise-card {
+		background: rgba(30, 50, 42, 0.9);
+	}
+	
+	:root[data-theme="light"] .expertise-card {
+		background: rgba(255, 255, 255, 0.9);
+	}
+	
+	.card {
+		background: rgba(30, 50, 42, 0.9);
+	}
+	
+	:root[data-theme="light"] .card {
+		background: rgba(255, 255, 255, 0.9);
+	}
+	
+	.timeline-item {
+		background: rgba(30, 50, 42, 0.9);
+	}
+	
+	:root[data-theme="light"] .timeline-item {
+		background: rgba(255, 255, 255, 0.9);
+	}
+
 	h1 {
 		font-size: 32px;
 	}
