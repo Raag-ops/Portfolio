@@ -137,12 +137,15 @@ function initSplashScreen() {
     if (!splashActive) return;
     splashActive = false;
     splashScreen.classList.add('hidden');
+    splashScreen.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('splash-active');
     document.body.style.overflow = '';
     
     // Remove splash after animation completes
     setTimeout(() => {
       splashScreen.style.display = 'none';
+      // Optionally remove from DOM entirely
+      // splashScreen.remove();
     }, 800);
   }
   
