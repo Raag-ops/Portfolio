@@ -21,6 +21,31 @@
     
     // Initialize grid with random cells
     let grid = [];
+    const MAX_STATE_HISTORY = 24;
+    const seenStates = new Set();
+    const stateQueue = [];
+
+    function resetStateHistory() {
+        seenStates.clear();
+        stateQueue.length = 0;
+    }
+
+    function pushStateSignature(signature) {
+        stateQueue.push(signature);
+        seenStates.add(signature);
+
+        if (stateQueue.length > MAX_STATE_HISTORY) {
+            const removed = stateQueue.shift();
+            if (!stateQueue.includes(removed)) {
+                seenStates.delete(removed);
+            }
+        }
+    }
+
+    function getGridSignature() {
+        return grid.map(row => row.join('')).join('|');
+    }
+
     function initGrid() {
         grid = [];
         for (let y = 0; y < gridSize; y++) {
@@ -29,6 +54,9 @@
                 grid[y][x] = Math.random() > 0.6 ? 1 : 0;
             }
         }
+
+        resetStateHistory();
+        pushStateSignature(getGridSignature());
     }
     
     // Count neighbors for a cell
@@ -64,8 +92,15 @@
         grid = newGrid;
     }
     
-    // Check if grid is static or empty
+    // Check if grid is static, looping, empty, or overcrowded
     function isGridStale() {
+        const signature = getGridSignature();
+        if (seenStates.has(signature)) {
+            return true;
+        }
+
+        pushStateSignature(signature);
+
         let aliveCount = 0;
         for (let y = 0; y < gridSize; y++) {
             for (let x = 0; x < gridSize; x++) {

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Protobytes Hackathon Placeholder</title>
+  <desc id="desc">Placeholder image for Protobytes Hackathon 2.0 project card</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#123024"/>
+      <stop offset="100%" stop-color="#1f513d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <g fill="#dffbe8" font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <text x="600" y="300" font-size="56" font-weight="700">Protobytes Hackathon 2.0</text>
+    <text x="600" y="360" font-size="34" opacity="0.9">Project Preview Placeholder</text>
+    <text x="600" y="420" font-size="24" opacity="0.8">Replace with final screenshot anytime</text>
+  </g>
+</svg>
