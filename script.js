@@ -9,6 +9,13 @@ let theme = 'dark';
 const nodes = [];
 const edges = [];
 let draggedNode = null;
+let depthValue = 0;
+
+let contourField = null;
+let contourCols = 0;
+let contourRows = 0;
+let contourGradient = null;
+let contourGradientHeight = 0;
 
 // Mobile detection and performance settings
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
@@ -205,6 +212,8 @@ function resize() {
   canvas.width = width * dpr;
   canvas.height = height * dpr;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  contourGradient = null;
+  contourGradientHeight = 0;
   if (theme === 'light') initNetwork();
 }
 
@@ -341,20 +350,29 @@ function getTerrainColor(elevation) {
 function drawContours(depth) {
   ctx.clearRect(0, 0, width, height);
 
-  // Subtle vertical gradient for depth
-  const gradient = ctx.createLinearGradient(0, 0, 0, height);
-  gradient.addColorStop(0, '#123024');
-  gradient.addColorStop(0.6, '#10271d');
-  gradient.addColorStop(1, '#0f241b');
-  ctx.fillStyle = gradient;
+  // Cache gradient until canvas height changes.
+  if (!contourGradient || contourGradientHeight !== height) {
+    contourGradient = ctx.createLinearGradient(0, 0, 0, height);
+    contourGradient.addColorStop(0, '#123024');
+    contourGradient.addColorStop(0.6, '#10271d');
+    contourGradient.addColorStop(1, '#0f241b');
+    contourGradientHeight = height;
+  }
+  ctx.fillStyle = contourGradient;
   ctx.fillRect(0, 0, width, height);
 
   const time = tick * 0.0018;
-  // Reduce complexity on mobile
-  const numContours = isMobile ? 8 : 16;
-  const resolution = isMobile ? 16 : 9;
+  const numContours = isMobile ? 8 : 14;
+  const resolution = isMobile ? 16 : 10;
   const cols = Math.ceil(width / resolution);
   const rows = Math.ceil(height / resolution);
+
+  if (!contourField || contourCols !== cols || contourRows !== rows) {
+    contourField = new Float32Array(cols * rows);
+    contourCols = cols;
+    contourRows = rows;
+  }
+  const field = contourField;
   
   // Precompute moving centers for organic drift
   const centers = [
@@ -366,19 +384,18 @@ function drawContours(depth) {
   ].map((c, i) => {
     const angle = time * c.speed + i * 1.2;
     const drift = (idx) => Math.sin(angle + idx * 0.7) * 40;
+    const pulse = Math.sin(time * c.speed) * 50 + c.radius;
     return {
       x: width * c.baseX + drift(1),
       y: height * c.baseY + drift(2),
-      radius: c.radius,
-      speed: c.speed,
-      scale: c.scale
+      phase: time * c.speed * 1.05,
+      scale: c.scale,
+      invPulseFactor: 1 / (pulse * 1.25)
     };
   });
   
-  // Create smooth height field with circular pulsating patterns
-  const field = new Array(rows);
+  // Create smooth height field with circular pulsating patterns.
   for (let y = 0; y < rows; y++) {
-    field[y] = new Array(cols);
     for (let x = 0; x < cols; x++) {
       const px = x * resolution;
       const py = y * resolution;
@@ -390,32 +407,26 @@ function drawContours(depth) {
         const dx = px - center.x;
         const dy = py - center.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const pulse = Math.sin(time * center.speed) * 50 + center.radius;
-        const wave = Math.sin(dist * 0.008 - time * center.speed * 1.05) * center.scale;
-        heightVal += wave * Math.exp(-dist / (pulse * 1.25));
+        const wave = Math.sin(dist * 0.008 - center.phase) * center.scale;
+        heightVal += wave * Math.exp(-dist * center.invPulseFactor);
       }
       
       // Add gentle noise for texture
       const noise = smoothNoise2D(px * 0.0025, py * 0.0025) * 0.25;
-      
-      field[y][x] = heightVal + noise;
+      field[y * cols + x] = heightVal + noise;
     }
   }
   
   // Normalize field
   let min = Infinity, max = -Infinity;
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      const v = field[y][x];
-      if (v < min) min = v;
-      if (v > max) max = v;
-    }
+  for (let i = 0; i < field.length; i++) {
+    const v = field[i];
+    if (v < min) min = v;
+    if (v > max) max = v;
   }
   const span = Math.max(0.0001, max - min);
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      field[y][x] = (field[y][x] - min) / span;
-    }
+  for (let i = 0; i < field.length; i++) {
+    field[i] = (field[i] - min) / span;
   }
   
   // Draw smooth contour lines with sparse, non-linear spacing
@@ -437,45 +448,111 @@ function drawContours(depth) {
     
     for (let y = 0; y < rows - 1; y++) {
       for (let x = 0; x < cols - 1; x++) {
-        const v0 = field[y][x];
-        const v1 = field[y][x + 1];
-        const v2 = field[y + 1][x + 1];
-        const v3 = field[y + 1][x];
+        const i0 = y * cols + x;
+        const i1 = i0 + 1;
+        const i3 = i0 + cols;
+        const i2 = i3 + 1;
+
+        const v0 = field[i0];
+        const v1 = field[i1];
+        const v2 = field[i2];
+        const v3 = field[i3];
         
         const px = x * resolution;
         const py = y * resolution;
-        
-        const smooth = (a, b, tVal) => {
-          const s = tVal * tVal * (3 - 2 * tVal);
-          return a + (b - a) * s;
-        };
-        const edgePoint = (va, vb, pa, pb) => {
-          const tEdge = (level - va) / (vb - va + 0.00001);
-          return smooth(pa, pb, Math.max(0, Math.min(1, tEdge)));
-        };
-        
-        const pts = [];
-        if ((v0 < level && v1 >= level) || (v0 >= level && v1 < level)) {
-          pts.push({ x: edgePoint(v0, v1, px, px + resolution), y: py });
+
+        let ax = 0, ay = 0, bx = 0, by = 0, cx = 0, cy = 0, dx = 0, dy = 0;
+        let ptCount = 0;
+
+        if ((v0 < level) !== (v1 < level)) {
+          let tEdge = (level - v0) / (v1 - v0 + 0.00001);
+          if (tEdge < 0) tEdge = 0;
+          if (tEdge > 1) tEdge = 1;
+          const s = tEdge * tEdge * (3 - 2 * tEdge);
+          if (ptCount === 0) {
+            ax = px + resolution * s;
+            ay = py;
+          } else if (ptCount === 1) {
+            bx = px + resolution * s;
+            by = py;
+          } else if (ptCount === 2) {
+            cx = px + resolution * s;
+            cy = py;
+          } else {
+            dx = px + resolution * s;
+            dy = py;
+          }
+          ptCount++;
         }
-        if ((v1 < level && v2 >= level) || (v1 >= level && v2 < level)) {
-          pts.push({ x: px + resolution, y: edgePoint(v1, v2, py, py + resolution) });
+        if ((v1 < level) !== (v2 < level)) {
+          let tEdge = (level - v1) / (v2 - v1 + 0.00001);
+          if (tEdge < 0) tEdge = 0;
+          if (tEdge > 1) tEdge = 1;
+          const s = tEdge * tEdge * (3 - 2 * tEdge);
+          if (ptCount === 0) {
+            ax = px + resolution;
+            ay = py + resolution * s;
+          } else if (ptCount === 1) {
+            bx = px + resolution;
+            by = py + resolution * s;
+          } else if (ptCount === 2) {
+            cx = px + resolution;
+            cy = py + resolution * s;
+          } else {
+            dx = px + resolution;
+            dy = py + resolution * s;
+          }
+          ptCount++;
         }
-        if ((v3 < level && v2 >= level) || (v3 >= level && v2 < level)) {
-          pts.push({ x: edgePoint(v3, v2, px, px + resolution), y: py + resolution });
+        if ((v3 < level) !== (v2 < level)) {
+          let tEdge = (level - v3) / (v2 - v3 + 0.00001);
+          if (tEdge < 0) tEdge = 0;
+          if (tEdge > 1) tEdge = 1;
+          const s = tEdge * tEdge * (3 - 2 * tEdge);
+          if (ptCount === 0) {
+            ax = px + resolution * s;
+            ay = py + resolution;
+          } else if (ptCount === 1) {
+            bx = px + resolution * s;
+            by = py + resolution;
+          } else if (ptCount === 2) {
+            cx = px + resolution * s;
+            cy = py + resolution;
+          } else {
+            dx = px + resolution * s;
+            dy = py + resolution;
+          }
+          ptCount++;
         }
-        if ((v0 < level && v3 >= level) || (v0 >= level && v3 < level)) {
-          pts.push({ x: px, y: edgePoint(v0, v3, py, py + resolution) });
+        if ((v0 < level) !== (v3 < level)) {
+          let tEdge = (level - v0) / (v3 - v0 + 0.00001);
+          if (tEdge < 0) tEdge = 0;
+          if (tEdge > 1) tEdge = 1;
+          const s = tEdge * tEdge * (3 - 2 * tEdge);
+          if (ptCount === 0) {
+            ax = px;
+            ay = py + resolution * s;
+          } else if (ptCount === 1) {
+            bx = px;
+            by = py + resolution * s;
+          } else if (ptCount === 2) {
+            cx = px;
+            cy = py + resolution * s;
+          } else {
+            dx = px;
+            dy = py + resolution * s;
+          }
+          ptCount++;
         }
-        
-        if (pts.length === 2) {
-          ctx.moveTo(pts[0].x, pts[0].y);
-          ctx.lineTo(pts[1].x, pts[1].y);
-        } else if (pts.length === 4) {
-          ctx.moveTo(pts[0].x, pts[0].y);
-          ctx.lineTo(pts[1].x, pts[1].y);
-          ctx.moveTo(pts[2].x, pts[2].y);
-          ctx.lineTo(pts[3].x, pts[3].y);
+
+        if (ptCount === 2) {
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+        } else if (ptCount === 4) {
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(dx, dy);
         }
       }
     }
@@ -487,6 +564,7 @@ function drawContours(depth) {
 function onScroll() {
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
   const depth = Math.min(1, Math.max(0, window.scrollY / Math.max(1, maxScroll)));
+  depthValue = depth;
   document.documentElement.style.setProperty('--depth', depth.toFixed(3));
 }
 
@@ -583,7 +661,7 @@ function loop(currentTime) {
   }
   lastFrameTime = currentTime;
   
-  const depth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--depth')) || 0;
+  const depth = depthValue;
   if (theme === 'dark') {
     drawContours(depth);
   } else {
